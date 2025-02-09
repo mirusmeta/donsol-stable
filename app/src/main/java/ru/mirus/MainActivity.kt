@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                             phone to rate
                         }
                         if(kolvoAll != 0){
-                            likes.text = (ratesOfAll!! / kolvoAll!!).toString()
+                            likes.text = (ratesOfAll!! / kolvoAll!!).toString().substring(0, 3)
                             views.text = kolvoAll.toString()
                         }else{
                             likes.text = "0"
@@ -297,9 +297,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun myupdatebase() {
         Log.d("20241", "Обновление бд моих обращений")
-        var h = Handler()
+        val h = Handler()
         h.postDelayed({//Задержка так как он должен подргузить картинки
-            var listview:RecyclerView = findViewById(R.id.listview)
+            var  listview:RecyclerView = findViewById(R.id.listview)
             val db = FirebaseFirestore.getInstance()
             val reportsCollection = db.collection("reports")
             reportsCollection.get()

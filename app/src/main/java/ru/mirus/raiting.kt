@@ -76,7 +76,6 @@ class raiting : AppCompatActivity() {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
                 Picasso.get().load(uri).transform(RoundedCornersTransformation(60f)).into(myImageForLoading)
             }
-
             stringOfAll = it.getString("marksofall")
             stringOfAll?.split("+")?.filter { it.isNotEmpty() }?.map{ pair ->
                 val parts = pair.split(":")

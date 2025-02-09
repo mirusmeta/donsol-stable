@@ -18,8 +18,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         addManifestPlaceholders(mapOf(
-            "VKIDRedirectHost" to "vk.com", // Обычно vk.com.
-            "VKIDRedirectScheme" to "vk51987085", // Строго в формате vk{ID приложения}.
+            "VKIDRedirectHost" to "vk.com",
+            "VKIDRedirectScheme" to "vk51987085",
+            "VKIDClientID" to "51987085",
+            "VKIDClientSecret" to "r3i2KZZYQ3rZJmFnD3Ry"
+        ))
+
+        addManifestPlaceholders(mapOf(
+            "VKIDRedirectHost" to "vk.com",
+            "VKIDRedirectScheme" to "vk51987085",
             "VKIDClientID" to "51987085",
             "VKIDClientSecret" to "r3i2KZZYQ3rZJmFnD3Ry"
         ))

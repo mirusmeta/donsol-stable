@@ -122,8 +122,8 @@
             <ImageView
                 android:background="@drawable/rounded_background"
                 android:id="@+id/imgoftask"
-                android:layout_width="108dp"
-                android:layout_height="81dp"
+                android:layout_width="107dp"
+                android:layout_height="80dp"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/constraintLayout5"
                 app:layout_constraintEnd_toEndOf="parent"
