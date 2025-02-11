@@ -16,4 +16,6 @@
     <color name="gray">#646464</color>
     <color name="blue_text">#006BC7</color>
     <color name="a_bit_gray">#0F0F0F</color>
+    <color name="square_active">#FF00FF</color>
+    <color name="square_inactive">#B3B3B3</color>
 </resources>

@@ -1,0 +1,10 @@
+<!-- res/drawable/button_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние для отключенной кнопки -->
+    <item >
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <solid android:color="#D9D9D9" /> <!-- Цвет для включенного состояния -->
+        </shape>
+    </item>
+</selector>

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -46,6 +47,22 @@ class raiting : AppCompatActivity() {
     private val rateAmmount by lazy {
         findViewById<TextView>(R.id.rateAmmount)
     }
+    //Звезды рейтинга
+    private val star1 by lazy {
+        findViewById<RelativeLayout>(R.id.star1)
+    }
+    private val star2 by lazy {
+        findViewById<RelativeLayout>(R.id.star2)
+    }
+    private val star3 by lazy {
+        findViewById<RelativeLayout>(R.id.star3)
+    }
+    private val star4 by lazy {
+        findViewById<RelativeLayout>(R.id.star4)
+    }
+    private val star5 by lazy {
+        findViewById<RelativeLayout>(R.id.star5)
+    }
     /*private val ochen by lazy{
         findViewById<Button>(R.id.ochen)
     }*/
@@ -59,6 +76,7 @@ class raiting : AppCompatActivity() {
     private var ratesOfAll: Double? = 0.0
     private var kolvoAll:Int? = 0
     private var MYRATE:Int? = null
+    private var RATED = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,16 +106,57 @@ class raiting : AppCompatActivity() {
                 kolvoAll = kolvoAll!! + 1
                 if(phoneOfUserWithoutText == phone){
                     MYRATE = rate
-                    /*ratingBar.rating = MYRATE!!.toFloat()
-                    ochen.visibility = View.INVISIBLE*/
                 }
                 phone to rate
             }
+
+            //Связка звезд
+            star1.setOnClickListener {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.inactive_star)
+                star3.setBackgroundResource(R.drawable.inactive_star)
+                star4.setBackgroundResource(R.drawable.inactive_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+                RATED = 1
+            }
+            star2.setOnClickListener {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.inactive_star)
+                star4.setBackgroundResource(R.drawable.inactive_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+                RATED = 2
+            }
+            star3.setOnClickListener {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.active_star)
+                star4.setBackgroundResource(R.drawable.inactive_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+                RATED = 3
+            }
+            star4.setOnClickListener {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.active_star)
+                star4.setBackgroundResource(R.drawable.active_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+                RATED = 4
+            }
+            star5.setOnClickListener {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.active_star)
+                star4.setBackgroundResource(R.drawable.active_star)
+                star5.setBackgroundResource(R.drawable.active_star)
+                RATED = 5
+            }
             if(kolvoAll != 0){
-                var subed = (ratesOfAll!! / kolvoAll!!).toString().substring(0,3)
+                val subed = (ratesOfAll!! / kolvoAll!!).toString().substring(0,3)
                 likes.text = subed
                 rateAmmount.text = subed
                 views.text = kolvoAll.toString()
+                showRating(MYRATE!!.toInt())
             }else{
                 likes.text = "0"
                 views.text = "0"
@@ -160,5 +219,46 @@ class raiting : AppCompatActivity() {
                 }
             }
         }*/
+    }
+
+    private fun showRating(floatzn: Int) {
+        when(floatzn){
+            1 -> {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.inactive_star)
+                star3.setBackgroundResource(R.drawable.inactive_star)
+                star4.setBackgroundResource(R.drawable.inactive_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+            }
+            2 -> {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.inactive_star)
+                star4.setBackgroundResource(R.drawable.inactive_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+            }
+            3 -> {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.active_star)
+                star4.setBackgroundResource(R.drawable.inactive_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+            }
+            4 -> {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.active_star)
+                star4.setBackgroundResource(R.drawable.active_star)
+                star5.setBackgroundResource(R.drawable.inactive_star)
+            }
+            5 -> {
+                star1.setBackgroundResource(R.drawable.active_star)
+                star2.setBackgroundResource(R.drawable.active_star)
+                star3.setBackgroundResource(R.drawable.active_star)
+                star4.setBackgroundResource(R.drawable.active_star)
+                star5.setBackgroundResource(R.drawable.active_star)
+            }
+
+        }
     }
 }
