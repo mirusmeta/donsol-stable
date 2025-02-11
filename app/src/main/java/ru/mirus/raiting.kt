@@ -118,12 +118,19 @@ class raiting : AppCompatActivity() {
                 val parts = pair.split(":")
                 val phone = "+${parts[0]}"
                 val rate = parts[1].toInt()
-                ratesOfAll = ratesOfAll!! + rate
-                kolvoAll = kolvoAll!! + 1
-                if(phoneOfUserWithoutText == phone){
-                    MYRATE = rate
+                if(rate == 0){
+                    MYRATE = 0
+                    stringOfAll = stringOfAll?.replace("$phoneOfUserWithoutText:0", "")
                 }
-                phone to rate
+                else{
+                    ratesOfAll = ratesOfAll!! + rate
+                    kolvoAll = kolvoAll!! + 1
+                    if(phoneOfUserWithoutText == phone){
+                        MYRATE = rate
+                    }
+                    phone to rate
+                }
+
             }
 
             //Прогрессные бары
@@ -277,7 +284,7 @@ class raiting : AppCompatActivity() {
 
     override fun onDestroy() {
         val db = Firebase.firestore
-        if(stringOfAll != null){
+        if(stringOfAll != null && RATED != 0){
             stringOfAll += "$phoneOfUserWithoutText:${RATED}"
             db.collection("reports").document(ID_OF_DOC).update(mapOf("marksofall" to stringOfAll)).addOnSuccessListener {
                 finish()
