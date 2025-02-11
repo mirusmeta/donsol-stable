@@ -166,7 +166,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
-            android:text="4.3"
+            android:text="0"
             android:textColor="@color/black"
             android:textSize="30dp"
             android:layout_width="wrap_content"
@@ -239,34 +239,107 @@
 
         </RelativeLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="150dp"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:text="5 ◴"
+                app:layout_constraintTop_toTopOf="@id/prbar5"
+                app:layout_constraintBottom_toBottomOf="@id/prbar5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="4 ◴"
+                app:layout_constraintTop_toTopOf="@id/prbar4"
+                app:layout_constraintBottom_toBottomOf="@id/prbar4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="3 ◴"
+                app:layout_constraintTop_toTopOf="@id/prbar3"
+                app:layout_constraintBottom_toBottomOf="@id/prbar3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="2 ◴"
+                app:layout_constraintTop_toTopOf="@id/prbar2"
+                app:layout_constraintBottom_toBottomOf="@id/prbar2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="1 ◴"
+                app:layout_constraintTop_toTopOf="@id/prbar1"
+                app:layout_constraintBottom_toBottomOf="@id/prbar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ProgressBar
+                android:layout_marginStart="27dp"
+                android:src="@drawable/custom_progress_bar"
+                android:id="@+id/prbar5"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:layout_marginStart="27dp"
+                android:src="@drawable/custom_progress_bar"
+                android:id="@+id/prbar4"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/prbar3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/prbar5" />
+
+            <ProgressBar
+                android:layout_marginStart="27dp"
+                android:src="@drawable/custom_progress_bar"
+                android:id="@+id/prbar3"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/prbar2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/prbar4" />
+
+            <ProgressBar
+                android:layout_marginStart="27dp"
+                android:src="@drawable/custom_progress_bar"
+                android:id="@+id/prbar2"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/prbar1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/prbar3" />
+
+            <ProgressBar
+                android:layout_marginStart="27dp"
+                android:src="@drawable/custom_progress_bar"
+                android:id="@+id/prbar1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/prbar2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <RatingBar-->
-<!--        android:scaleX="1.1"-->
-<!--        android:scaleY="1.1"-->
-<!--        android:id="@+id/ratingBar"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="12dp"-->
-<!--        android:progressTint="@color/btn"-->
-<!--        android:stepSize="1"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/ochen"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--    <androidx.appcompat.widget.AppCompatButton-->
-<!--        android:id="@+id/ochen"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:layout_marginStart="20dp"-->
-<!--        android:layout_marginEnd="20dp"-->
-<!--        android:layout_marginBottom="40dp"-->
-<!--        android:background="@drawable/knopkaotpravit"-->
-<!--        android:text="Оценить"-->
-<!--        android:textAllCaps="false"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textSize="18dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

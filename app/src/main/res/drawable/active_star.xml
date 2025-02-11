@@ -4,7 +4,7 @@
     <item >
         <shape android:shape="rectangle">
             <corners android:radius="4dp" />
-            <solid android:color="#76B6E8" /> <!-- Цвет для включенного состояния -->
+            <solid android:color="@color/btn" /> <!-- Цвет для включенного состояния -->
         </shape>
     </item>
 </selector>

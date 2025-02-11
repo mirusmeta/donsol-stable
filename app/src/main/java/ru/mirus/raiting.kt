@@ -1,5 +1,6 @@
 package ru.mirus
 
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -7,9 +8,11 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -63,6 +66,21 @@ class raiting : AppCompatActivity() {
     private val star5 by lazy {
         findViewById<RelativeLayout>(R.id.star5)
     }
+    private val prbar1 by lazy {
+        findViewById<ProgressBar>(R.id.prbar1)
+    }
+    private val prbar2 by lazy {
+        findViewById<ProgressBar>(R.id.prbar2)
+    }
+    private val prbar3 by lazy {
+        findViewById<ProgressBar>(R.id.prbar3)
+    }
+    private val prbar4 by lazy {
+        findViewById<ProgressBar>(R.id.prbar4)
+    }
+    private val prbar5 by lazy {
+        findViewById<ProgressBar>(R.id.prbar5)
+    }
     /*private val ochen by lazy{
         findViewById<Button>(R.id.ochen)
     }*/
@@ -77,21 +95,19 @@ class raiting : AppCompatActivity() {
     private var kolvoAll:Int? = 0
     private var MYRATE:Int? = null
     private var RATED = 0
+    private var ID_OF_DOC = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_raiting)
 
         val id = intent.getStringExtra("id")
+        ID_OF_DOC = id.toString()
         val db = Firebase.firestore
 
-        /*ochen.isEnabled = false
-        val ratingBar:RatingBar = findViewById(R.id.ratingBar)
-        ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser -> ochen.isEnabled = true }*/
-
         db.collection("reports").document(id.toString()).get().addOnSuccessListener {
-            name.text = it.getString("name")
 
+            name.text = it.getString("name")
             val storage = FirebaseStorage.getInstance()
             val storageRef = storage.reference.child("images/${it.getString("image")}")
             storageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -110,6 +126,10 @@ class raiting : AppCompatActivity() {
                 phone to rate
             }
 
+            //Прогрессные бары
+
+
+            stringOfAll = stringOfAll?.replace("$phoneOfUserWithoutText:$MYRATE", "")
             //Связка звезд
             star1.setOnClickListener {
                 star1.setBackgroundResource(R.drawable.active_star)
@@ -208,17 +228,6 @@ class raiting : AppCompatActivity() {
                 Log.d("20241", "Добавлена карта с маркером")
             }
         },600)
-        /*ochen.setOnClickListener {
-            if(stringOfAll != null){
-                stringOfAll += "$phoneOfUserWithoutText:${ratingBar.rating.toInt()}"
-                db.collection("reports").document(id.toString()).update(mapOf("marksofall" to stringOfAll)).addOnSuccessListener {
-                    finish()
-                }.addOnFailureListener {
-                    Snackbar.make(findViewById(R.id.backg), "Ошибка, попробуйте позже", Snackbar.LENGTH_LONG).show()
-                    finish()
-                }
-            }
-        }*/
     }
 
     private fun showRating(floatzn: Int) {
@@ -260,5 +269,19 @@ class raiting : AppCompatActivity() {
             }
 
         }
+    }
+
+    override fun onDestroy() {
+        val db = Firebase.firestore
+        if(stringOfAll != null){
+            stringOfAll += "$phoneOfUserWithoutText:${RATED}"
+            db.collection("reports").document(ID_OF_DOC).update(mapOf("marksofall" to stringOfAll)).addOnSuccessListener {
+                finish()
+            }.addOnFailureListener {
+                Snackbar.make(findViewById(R.id.backg), "Ошибка, попробуйте позже", Snackbar.LENGTH_LONG).show()
+                finish()
+            }
+        }
+        super.onDestroy()
     }
 }
