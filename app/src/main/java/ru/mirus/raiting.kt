@@ -68,7 +68,7 @@ class raiting : AppCompatActivity() {
         val ratingBar:RatingBar = findViewById(R.id.ratingBar)
         ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser -> ochen.isEnabled = true }
 
-        db.collection("reports").document(id.toString()).get().addOnSuccessListener {
+        /*db.collection("reports").document(id.toString()).get().addOnSuccessListener {
             name.text = it.getString("name")
 
             val storage = FirebaseStorage.getInstance()
@@ -154,6 +154,6 @@ class raiting : AppCompatActivity() {
                     finish()
                 }
             }
-        }
+        }*/
     }
 }
