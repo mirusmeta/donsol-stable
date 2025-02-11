@@ -119,6 +119,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imagev" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:layout_marginStart="20dp"
@@ -136,7 +137,17 @@
         </FrameLayout>
 
     </androidx.cardview.widget.CardView>
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardofrate"
+        android:layout_width="match_parent"
+        android:background="@drawable/rounded_for_white_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 <!--    <RatingBar-->
 <!--        android:scaleX="1.1"-->

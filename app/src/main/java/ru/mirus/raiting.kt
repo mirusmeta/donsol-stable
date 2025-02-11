@@ -43,9 +43,9 @@ class raiting : AppCompatActivity() {
     private val myImageForLoading by lazy{
         findViewById<ImageView>(R.id.imagev)
     }
-    private val ochen by lazy{
+    /*private val ochen by lazy{
         findViewById<Button>(R.id.ochen)
-    }
+    }*/
     private val phoneOfUserWithoutText by lazy { "+${VKID.instance.accessToken?.userData?.phone}" }
 
 
@@ -64,11 +64,11 @@ class raiting : AppCompatActivity() {
         val id = intent.getStringExtra("id")
         val db = Firebase.firestore
 
-        ochen.isEnabled = false
+        /*ochen.isEnabled = false
         val ratingBar:RatingBar = findViewById(R.id.ratingBar)
-        ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser -> ochen.isEnabled = true }
+        ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser -> ochen.isEnabled = true }*/
 
-        /*db.collection("reports").document(id.toString()).get().addOnSuccessListener {
+        db.collection("reports").document(id.toString()).get().addOnSuccessListener {
             name.text = it.getString("name")
 
             val storage = FirebaseStorage.getInstance()
@@ -85,8 +85,8 @@ class raiting : AppCompatActivity() {
                 kolvoAll = kolvoAll!! + 1
                 if(phoneOfUserWithoutText == phone){
                     MYRATE = rate
-                    ratingBar.rating = MYRATE!!.toFloat()
-                    ochen.visibility = View.INVISIBLE
+                    /*ratingBar.rating = MYRATE!!.toFloat()
+                    ochen.visibility = View.INVISIBLE*/
                 }
                 phone to rate
             }
@@ -144,7 +144,7 @@ class raiting : AppCompatActivity() {
                 Log.d("20241", "Добавлена карта с маркером")
             }
         },600)
-        ochen.setOnClickListener {
+        /*ochen.setOnClickListener {
             if(stringOfAll != null){
                 stringOfAll += "$phoneOfUserWithoutText:${ratingBar.rating.toInt()}"
                 db.collection("reports").document(id.toString()).update(mapOf("marksofall" to stringOfAll)).addOnSuccessListener {
