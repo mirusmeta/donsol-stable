@@ -147,7 +147,40 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_height="200dp"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <TextView
+            android:id="@+id/textDescRating"
+            android:layout_marginTop="20dp"
+            android:textSize="16dp"
+            android:layout_marginStart="20dp"
+            android:text="Средний рейтинг"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/rateAmmount"
+            app:layout_constraintTop_toBottomOf="@id/textDescRating"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="4.3"
+            android:textColor="@color/black"
+            android:textSize="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginBottom="3dp"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="7dp"
+            android:text="/ 5"
+            android:textSize="17dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/rateAmmount"
+            app:layout_constraintStart_toEndOf="@id/rateAmmount" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--    <RatingBar-->
 <!--        android:scaleX="1.1"-->

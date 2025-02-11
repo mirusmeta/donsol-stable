@@ -43,6 +43,9 @@ class raiting : AppCompatActivity() {
     private val myImageForLoading by lazy{
         findViewById<ImageView>(R.id.imagev)
     }
+    private val rateAmmount by lazy {
+        findViewById<TextView>(R.id.rateAmmount)
+    }
     /*private val ochen by lazy{
         findViewById<Button>(R.id.ochen)
     }*/
@@ -91,7 +94,9 @@ class raiting : AppCompatActivity() {
                 phone to rate
             }
             if(kolvoAll != 0){
-                likes.text = (ratesOfAll!! / kolvoAll!!).toString().substring(0,3)
+                var subed = (ratesOfAll!! / kolvoAll!!).toString().substring(0,3)
+                likes.text = subed
+                rateAmmount.text = subed
                 views.text = kolvoAll.toString()
             }else{
                 likes.text = "0"
