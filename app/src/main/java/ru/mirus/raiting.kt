@@ -127,7 +127,11 @@ class raiting : AppCompatActivity() {
             }
 
             //Прогрессные бары
-
+            prbar5.progress = safeProgress(kolvoAll.toString(), stringOfAll, ":5")
+            prbar4.progress = safeProgress(kolvoAll.toString(), stringOfAll, ":4")
+            prbar3.progress = safeProgress(kolvoAll.toString(), stringOfAll, ":3")
+            prbar2.progress = safeProgress(kolvoAll.toString(), stringOfAll, ":2")
+            prbar1.progress = safeProgress(kolvoAll.toString(), stringOfAll, ":1")
 
             stringOfAll = stringOfAll?.replace("$phoneOfUserWithoutText:$MYRATE", "")
             //Связка звезд
@@ -283,5 +287,20 @@ class raiting : AppCompatActivity() {
             }
         }
         super.onDestroy()
+    }
+
+    private fun safeProgress(kolvoAll: String?, stringOfAll: String?, delimiter: String): Int {
+        return try {
+            val totalElements = kolvoAll?.toIntOrNull() ?: 0
+            val count = stringOfAll?.split(delimiter)?.size?.minus(1) ?: 0
+
+            if (totalElements > 0 && count > 0) {
+                (count * 100) / totalElements // Корректная формула процента
+            } else {
+                0 // Если деление невозможно, возвращаем 0
+            }
+        } catch (e: Exception) {
+            0 // В случае ошибки возвращаем 0
+        }
     }
 }
