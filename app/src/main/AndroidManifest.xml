@@ -45,10 +45,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AdminMainActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".AuthChooserActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
