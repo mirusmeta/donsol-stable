@@ -12,8 +12,8 @@ android {
         applicationId = "ru.mirus.donsol"
         minSdk = 25
         targetSdk = 33
-        versionCode = 2
-        versionName = "1.1.2-beta"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
