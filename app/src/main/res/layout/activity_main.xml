@@ -69,8 +69,7 @@
                 android:text="Мои"/>
         </com.google.android.material.chip.ChipGroup>
         <androidx.recyclerview.widget.RecyclerView
-
-            android:id="@+id/listview"
+            android:id="@+id/recycle_list"
             android:layout_width="match_parent"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"

@@ -6,6 +6,8 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -22,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -36,13 +40,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import com.vk.id.VKID
 import com.vk.id.logout.VKIDLogoutCallback
 import com.vk.id.logout.VKIDLogoutFail
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     companion object {
         @JvmStatic
@@ -52,8 +63,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mMap: GoogleMap
     private lateinit var rostovPolygon: Polygon
     private lateinit var polygon: List<LatLng>
-    lateinit var mapFragment: SupportMapFragment
-    private var h = Handler()
+    private lateinit var mapFragment: SupportMapFragment
+    private lateinit var h: Handler
     private var db: FirebaseFirestore? = null
 
     //ФИО и Телефон
@@ -92,12 +103,13 @@ class MainActivity : AppCompatActivity() {
     private val chip2 by lazy { findViewById<Chip>(R.id.chip2) }
     private val add by lazy { findViewById<TextView>(R.id.add) }
     private var currentPage: Int = R.id.item_1
+    private val recycle_list by lazy { findViewById<RecyclerView>(R.id.recycle_list) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        h = Handler()
         db = Firebase.firestore
 
         runBottomMenu()//Нижнее меню
@@ -148,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                     val idOfPoint = it.snippet.toString()
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(it.position, 13.6f))
                     db?.collection("reports")?.document(idOfPoint)?.get()
-                        ?.addOnSuccessListener { it ->
+                        ?.addOnSuccessListener { res ->
                             if (constrofcard?.visibility == View.INVISIBLE) {
                                 constrofcard?.apply {
                                     visibility = View.VISIBLE
@@ -161,8 +173,8 @@ class MainActivity : AppCompatActivity() {
                                     animator.start()
                                 }
                             }
-                            nameofbrash?.text = it.getString("name").toString()
-                            cardcategory?.text = it.getString("categories").toString()
+                            nameofbrash?.text = res.getString("name").toString()
+                            cardcategory?.text = res.getString("categories").toString()
                             val statusMap = mapOf(
                                 "created" to "Создано",
                                 "viewed" to "Просмотрено",
@@ -171,18 +183,18 @@ class MainActivity : AppCompatActivity() {
                                 "denclined" to "Отклонено"
                             )
 
-                            val statust = it.getString("status")?.let { status ->
+                            val statust = res.getString("status")?.let { status ->
                                 statusMap.getOrDefault(status, "Ошибка загрузки")
                             } ?: "Ошибка загрузки"
 
                             status?.text = statust
                             val id = it.id
                             carddeskription?.text =
-                                limitStringLength(it.getString("deskription").toString())
+                                limitStringLength(res.getString("deskription").toString())
 
                             var ratesOfAll: Double? = 0.0
                             var kolvoAll: Int? = 0
-                            it.getString("marksofall")?.split("+")?.filter { it.isNotEmpty() }
+                            res.getString("marksofall")?.split("+")?.filter { it.isNotEmpty() }
                                 ?.map { pair ->
                                     val parts = pair.split(":")
                                     val phone = "+${parts[0]}"
@@ -202,7 +214,7 @@ class MainActivity : AppCompatActivity() {
 
                             val storageRef = FirebaseStorage.getInstance().reference.child(
                                 "images/${
-                                    it.getString("image")
+                                    res.getString("image")
                                 }"
                             )
                             storageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -283,7 +295,7 @@ class MainActivity : AppCompatActivity() {
 
         chip1?.setOnClickListener {
             if (chip2?.isChecked == true) {
-                firebaseupdate()
+                firebaseUpdate()
             }
             chip1?.isChecked = true
             chip2?.isChecked = false
@@ -302,7 +314,7 @@ class MainActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         db.collection("reports").addSnapshotListener { value, error ->
             Log.d("20241", "Слушатель на изменение данных в firestore")
-            firebaseupdate()
+            firebaseUpdate()
         }
     }
 
@@ -318,7 +330,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("20241", "Обновление бд моих обращений")
         val h = Handler()
         h.postDelayed({//Задержка так как он должен подргузить картинки
-            var listview: RecyclerView = findViewById(R.id.listview)
             val db = FirebaseFirestore.getInstance()
             val reportsCollection = db.collection("reports")
             reportsCollection.get()
@@ -363,8 +374,8 @@ class MainActivity : AppCompatActivity() {
                     reportsList.sortBy { it.raiting }
                     reportsList.reverse()
                     val reportAdapter = CustomAdapter(this@MainActivity, reportsList)
-                    listview.layoutManager = LinearLayoutManager(this)
-                    listview.adapter = reportAdapter
+                    recycle_list.layoutManager = LinearLayoutManager(this)
+                    recycle_list.adapter = reportAdapter
                 }
                 .addOnFailureListener { _ ->
                     Log.d("20241", "Ошибка бд")
@@ -380,106 +391,97 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun firebaseupdate() {
-        Log.d("20241", "Обновление бд всех обращений")
-        var h = Handler()
-        h.postDelayed({//Задержка так как он должен подргузить картинки
-            var listview: RecyclerView = findViewById(R.id.listview)
-            val db = FirebaseFirestore.getInstance()
-            val reportsCollection = db.collection("reports")
-            reportsCollection.get()
-                .addOnSuccessListener { result ->
-                    val reportsList = mutableListOf<CustomModel>()
-                    for (document in result) {
-                        if (document.getString("availbe").toString() == "true") {
-                            val lat = document.getDouble("wherelat")!!
-                            val lon = document.getDouble("wherelon")!!
-                            val name = document.getString("name").toString()
-                            var ratesOfAll: Double? = 0.0
-                            var kolvoAll: Int? = 0
+    private fun firebaseUpdate() {
+        Log.d("20241", "Обновление БД всех обращений")
 
-                            document.getString("marksofall")?.split("+")?.filter { it.isNotEmpty() }
-                                ?.map { pair ->
-                                    val parts = pair.split(":")
-                                    val phone = "+${parts[0]}"
-                                    val rate = parts[1].toInt()
-                                    ratesOfAll = ratesOfAll!! + rate
-                                    kolvoAll = kolvoAll!! + 1
-                                    phone to rate
-                                }
-                            var report: CustomModel
-                            if (kolvoAll != 0) {
-                                report = CustomModel(
-                                    document.id.toString(),
-                                    document.getString("name").toString(),
-                                    "Место: ${document.getString("city").toString()}",
-                                    "images/${document.getString("image").toString()}",
-                                    document.id.toString(),
-                                    ((ratesOfAll!! / kolvoAll!!).toDouble())
-                                )
-                            } else {
-                                report = CustomModel(
-                                    document.id.toString(),
-                                    document.getString("name").toString(),
-                                    "Место: ${document.getString("city").toString()}",
-                                    "images/${document.getString("image").toString()}",
-                                    document.id.toString(),
-                                    0.0
-                                )
+        val db = FirebaseFirestore.getInstance()
+        val reportsCollection = db.collection("reports")
+
+        reportsCollection.get()
+            .addOnSuccessListener { result ->
+                val reportsList = mutableListOf<CustomModel>()
+                val imageUrls = mutableListOf<String>()  // Список для предзагрузки изображений
+
+                for (document in result) {
+                    if (document.getString("availbe") == "true") {
+                        val lat = document.getDouble("wherelat")!!
+                        val lon = document.getDouble("wherelon")!!
+                        val name = document.getString("name").toString()
+                        val imagePath = "images/${document.getString("image")}"
+                        imageUrls.add(imagePath)
+
+                        var ratesOfAll = 0.0
+                        var kolvoAll = 0
+
+                        document.getString("marksofall")?.split("+")
+                            ?.filter { it.isNotEmpty() }
+                            ?.forEach { pair ->
+                                val parts = pair.split(":")
+                                ratesOfAll += parts[1].toInt()
+                                kolvoAll++
                             }
-                            reportsList.add(report)
-                            mapFragment.getMapAsync { map ->
-                                when (document.getString("status").toString()) {
-                                    "created" -> map.addMarker(
-                                        MarkerOptions().icon(
-                                            BitmapDescriptorFactory.defaultMarker(
-                                                BitmapDescriptorFactory.HUE_BLUE
-                                            )
-                                        ).title(name).position(LatLng(lat, lon))
-                                            .snippet(document.id.toString())
-                                    )
 
-                                    "viewed" -> map.addMarker(
-                                        MarkerOptions().icon(
-                                            BitmapDescriptorFactory.defaultMarker(
-                                                BitmapDescriptorFactory.HUE_AZURE
-                                            )
-                                        ).title(name).position(LatLng(lat, lon))
-                                            .snippet(document.id.toString())
-                                    )
+                        val rating = if (kolvoAll != 0) ratesOfAll / kolvoAll else 0.0
 
-                                    "incomplete" -> map.addMarker(
-                                        MarkerOptions().icon(
-                                            BitmapDescriptorFactory.defaultMarker(
-                                                BitmapDescriptorFactory.HUE_ORANGE
-                                            )
-                                        ).title(name).position(LatLng(lat, lon))
-                                            .snippet(document.id.toString())
-                                    )
+                        val report = CustomModel(
+                            document.id,
+                            name,
+                            "Место: ${document.getString("city")}",
+                            imagePath,
+                            document.id,
+                            rating
+                        )
+                        reportsList.add(report)
 
-                                    "completed" -> map.addMarker(
-                                        MarkerOptions().icon(
-                                            BitmapDescriptorFactory.defaultMarker(
-                                                BitmapDescriptorFactory.HUE_GREEN
-                                            )
-                                        ).title(name).position(LatLng(lat, lon))
-                                            .snippet(document.id.toString())
-                                    )
-                                }
+                        mapFragment.getMapAsync { map ->
+                            val markerColor = when (document.getString("status")) {
+                                "created" -> BitmapDescriptorFactory.HUE_BLUE
+                                "viewed" -> BitmapDescriptorFactory.HUE_AZURE
+                                "incomplete" -> BitmapDescriptorFactory.HUE_ORANGE
+                                "completed" -> BitmapDescriptorFactory.HUE_GREEN
+                                else -> BitmapDescriptorFactory.HUE_RED
                             }
+                            map.addMarker(
+                                MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
+                                    .title(name)
+                                    .position(LatLng(lat, lon))
+                                    .snippet(document.id)
+                            )
                         }
                     }
-                    reportsList.sortBy { it.raiting }
-                    reportsList.reverse()
-                    val reportAdapter = CustomAdapter(this@MainActivity, reportsList)
-                    listview.layoutManager = LinearLayoutManager(this)
-                    listview.adapter = reportAdapter
                 }
-                .addOnFailureListener { _ ->
-                    Toast.makeText(this, "Ошибка загрузки данных!", Toast.LENGTH_LONG).show()
+
+                // Предварительная загрузка изображений перед обновлением адаптера
+                preloadImages(imageUrls) {
+                    reportsList.sortByDescending { it.raiting }
+                    recycle_list.layoutManager = LinearLayoutManager(this)
+                    recycle_list.adapter = CustomAdapter(this@MainActivity, reportsList)
                 }
-        }, 100)
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Ошибка загрузки данных!", Toast.LENGTH_LONG).show()
+            }
     }
+
+    /**
+     * Предзагрузка изображений в кеш с помощью Glide
+     */
+    private fun preloadImages(imageUrls: List<String>, onComplete: () -> Unit) {
+        val imageLoader = Glide.with(this)
+        var counter = 0
+
+        for (url in imageUrls) {
+            imageLoader.load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .preload()
+                .apply {
+                    counter++
+                    if (counter == imageUrls.size) onComplete()  // Запускаем обновление UI после загрузки всех картинок
+                }
+        }
+    }
+
 
     private fun logout() {
         Log.d("20241", "Окно выхода")
@@ -576,7 +578,6 @@ class MainActivity : AppCompatActivity() {
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-
     }
 
     private fun drawRostovRegion() {
