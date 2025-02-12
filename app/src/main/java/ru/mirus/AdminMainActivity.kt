@@ -35,7 +35,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
-class AdminMainActivity : AppCompatActivity() {
+class sAdminMainActivity : AppCompatActivity() {
     companion object {
         @JvmStatic
         var ID = ""
@@ -50,7 +50,7 @@ class AdminMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_main)
-        var h = Handler()
+        /*var h = Handler()
         ISADMIN = true
         var constrofcard: ConstraintLayout = findViewById(R.id.constrofcard)
         var closeicon: ImageView = findViewById(R.id.closeicon)
@@ -522,6 +522,6 @@ class AdminMainActivity : AppCompatActivity() {
             text
         } else {
             lines.subList(0, maxLines).joinToString(" ") + "..."
-        }
+        }*/
     }
 }
