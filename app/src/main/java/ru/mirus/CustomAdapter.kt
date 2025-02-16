@@ -36,6 +36,7 @@ class CustomAdapter(private val context: Context, private val dataList: List<Cus
                 val intent = Intent(context, raiting::class.java)
                 intent.putExtra("id", currentItem.iddoc)
                 context.startActivity(intent)
+
             }
         }
 
