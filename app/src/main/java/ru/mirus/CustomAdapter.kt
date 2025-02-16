@@ -45,10 +45,10 @@ class CustomAdapter(private val context: Context, private val dataList: List<Cus
         storageRef.downloadUrl.addOnSuccessListener { uri ->
             Picasso.get()
                 .load(uri)
-                .transform(RoundedCornersTransformation(40f)) // радиус скругления углов
+                .transform(RoundedCornersTransformation(40f))
                 .into(holder.imagev)
         }.addOnFailureListener { exception ->
-            Log.e("FirestoreImageLoadError", "Failed to load image: ${exception.message}")
+            Log.e("FirestoreImageLoadError", "Не получилось загрузить изображение: ${exception.message}")
         }
     }
 
